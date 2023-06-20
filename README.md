@@ -47,33 +47,7 @@ docker-compose exec web python manage.py collectstatic --no-input
 Чтобы посмотреть спецификацию API в формате Redoc, нужно локально запустить 
 проект и перейти на страницу http://localhost/api/docs/
 
-### Доступ к сайту для проверки:
 
-Адрес сайта: http://158.160.23.97/
-
-Администратор:
-```
-admin              # Логин
-admin              # Пароль
-```
-
-Пользователь 1:
-```
-Ivan@mail.ru       # E-mail
-QazWsxEdc135       # Пароль
-```
-
-Пользователь 2:
-```
-Petr@mail.ru       # E-mail
-QazWsxEdc135       # Пароль
-```
-
-Пользователь 3:
-```
-Venec@mail.ru      # E-mail
-QazWsxEdc135       # Пароль
-```
 
 #### Автор: 
 **Яковлев Александр**
