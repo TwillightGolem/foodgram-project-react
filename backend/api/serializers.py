@@ -1,12 +1,17 @@
 from django.db.models import F
 from drf_base64.fields import Base64ImageField
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingList, Tag)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from users.models import User
 
-from users.serializers import CustomUserSerializer  # isort:skip
+from recipes.models import (
+    FavoriteRecipe,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingList,
+    Tag)
+from users.models import User
+from users.serializers import CustomUserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -56,7 +61,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time')
 
 
 class ShowRecipeSerializer(serializers.ModelSerializer):
@@ -70,9 +79,17 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'tags', 'author', 'ingredients',
-                  'is_favorited', 'is_in_shopping_cart',
-                  'name', 'image', 'text', 'cooking_time')
+        fields = (
+            'id',
+            'tags',
+            'author',
+            'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
+            'name',
+            'image',
+            'text',
+            'cooking_time')
 
     @staticmethod
     def get_ingredients(obj):
@@ -80,20 +97,16 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         return ShowIngredientsInRecipeSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, obj):
-
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return FavoriteRecipe.objects.filter(recipe=obj,
-                                             user=request.user).exists()
+        return (False if not request or not request.user.is_authenticated
+                else FavoriteRecipe.objects.filter(recipe=obj,
+                                                   user=request.user).exists())
 
     def get_is_in_shopping_cart(self, obj):
-
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return ShoppingList.objects.filter(recipe=obj,
-                                           user=request.user).exists()
+        return (False if not request or not request.user.is_authenticated
+                else ShoppingList.objects.filter(recipe=obj,
+                                                 user=request.user).exists())
 
 
 class AddIngredientRecipeSerializer(serializers.ModelSerializer):
@@ -103,7 +116,10 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'amount')
+        fields = (
+            'id',
+            'amount'
+        )
 
 
 class AddRecipeSerializer(serializers.ModelSerializer):
@@ -118,9 +134,16 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'ingredients', 'tags',
-                  'image', 'name', 'text',
-                  'cooking_time', 'author')
+        fields = (
+            'id',
+            'ingredients',
+            'tags',
+            'image',
+            'name',
+            'text',
+            'cooking_time',
+            'author'
+        )
 
     def validate_ingredients(self, ingredients):
 
@@ -139,6 +162,13 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 'Ингредиенты в рецепте должны быть уникальными!'
             )
         return ingredients
+
+    def validate_tags(tags):
+        if len(tags) != len(set(tags)):
+            raise ValidationError('Теги не могут повторяться!')
+        if tags is None:
+            raise ValidationError('У рецепта должен быть хотя бы один тег!')
+        return tags
 
     @staticmethod
     def validate_cooking_time(value):

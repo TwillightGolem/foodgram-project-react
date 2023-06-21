@@ -50,7 +50,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         related_manager.create(recipe=recipe)
         serializer = RecipeSerializer(instance=recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def _favorite_shopping_delete(self, related_manager):
         recipe = self.get_object()
         related_manager.get(recipe_id=recipe.id).delete()
@@ -80,7 +80,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         else:
             return self._favorite_shopping_delete(
                 request.user.shopping_user
-        )
+            )
 
     @action(
         detail=False,
