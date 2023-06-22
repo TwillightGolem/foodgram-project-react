@@ -1,8 +1,6 @@
 from django.db.models import F, Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Ingredient, Recipe, RecipeIngredient, ShoppingList,
-                            Tag)
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -11,9 +9,20 @@ from rest_framework.response import Response
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import LimitPageNumberPaginator
 from .permissions import IsAdminOrReadOnly, IsAuthorOrAdmin
-from .serializers import (AddRecipeSerializer, IngredientSerializer,
-                          RecipeSerializer, ShowRecipeSerializer,
-                          TagSerializer)
+from recipes.models import (
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingList,
+    Tag
+    )
+from .serializers import (
+    AddRecipeSerializer,
+    IngredientSerializer,
+    RecipeSerializer,
+    ShowRecipeSerializer,
+    TagSerializer
+    )
 
 
 def get_list_ingredients(user):

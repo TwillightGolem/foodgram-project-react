@@ -9,7 +9,8 @@ from recipes.models import (
     Recipe,
     RecipeIngredient,
     ShoppingList,
-    Tag)
+    Tag
+    )
 from users.models import User
 from users.serializers import CustomUserSerializer
 
@@ -65,7 +66,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
-            'cooking_time')
+            'cooking_time'
+        )
 
 
 class ShowRecipeSerializer(serializers.ModelSerializer):
@@ -89,7 +91,8 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             'name',
             'image',
             'text',
-            'cooking_time')
+            'cooking_time'
+            )
 
     @staticmethod
     def get_ingredients(obj):
@@ -178,27 +181,15 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             )
         return value
 
-    @staticmethod
-    def add_ingredients(ingredients, recipe):
-        for ingredient in ingredients:
-            ingredient_id = ingredient['id']
-            amount = ingredient['amount']
-            if RecipeIngredient.objects.filter(
-                    recipe=recipe, ingredient=ingredient_id).exists():
-                amount += F('amount')
-            RecipeIngredient.objects.update_or_create(
-                recipe=recipe, ingredient=ingredient_id,
-                defaults={'amount': amount}
-            )
-
     def create(self, validated_data):
         author = self.context.get('request').user
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         image = validated_data.pop('image')
+        RecipeIngredient.objects.bulk_create([RecipeIngredient(recipe=recipe, ingredient=i, 
+                                                               amount=i['amount']) for i in ingredients_data])
         recipe = Recipe.objects.create(image=image, author=author,
                                        **validated_data)
-        self.add_ingredients(ingredients_data, recipe)
         recipe.tags.set(tags_data)
         return recipe
 
@@ -206,7 +197,8 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         RecipeIngredient.objects.filter(recipe=recipe).delete()
-        self.add_ingredients(ingredients, recipe)
+        RecipeIngredient.objects.bulk_update([RecipeIngredient(recipe=recipe, ingredient=i, 
+                                                               amount=i['amount']) for i in ingredients])
         recipe.tags.set(tags)
         return super().update(recipe, validated_data)
 
@@ -221,8 +213,12 @@ class ShowFavoriteRecipeShopListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name',
-                  'image', 'cooking_time')
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )
 
 
 class FavoriteRecipeSerializer(serializers.ModelSerializer):
@@ -238,7 +234,10 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavoriteRecipe
-        fields = ('user', 'recipe')
+        fields = (
+            'user',
+            'recipe'
+        )
 
     def validate(self, data):
         user = data['user']
@@ -265,7 +264,10 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingList
-        fields = ('user', 'recipe')
+        fields = (
+            'user',
+            'recipe'
+        )
 
     def validate(self, data):
         user = data['user']
