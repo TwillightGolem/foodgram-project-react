@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-   pass
+    pass
 
 
 class Follow(models.Model):
@@ -33,3 +33,6 @@ class Follow(models.Model):
                 name='no_self_subscription'
             ),
         )
+
+    def __str__(self):
+        return self.author

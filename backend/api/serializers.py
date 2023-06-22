@@ -1,4 +1,3 @@
-from django.db.models import F
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -10,7 +9,7 @@ from recipes.models import (
     RecipeIngredient,
     ShoppingList,
     Tag
-    )
+)
 from users.models import User
 from users.serializers import CustomUserSerializer
 
@@ -92,7 +91,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             'image',
             'text',
             'cooking_time'
-            )
+        )
 
     @staticmethod
     def get_ingredients(obj):
@@ -186,10 +185,12 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         image = validated_data.pop('image')
-        RecipeIngredient.objects.bulk_create([RecipeIngredient(recipe=recipe, ingredient=i, 
-                                                               amount=i['amount']) for i in ingredients_data])
         recipe = Recipe.objects.create(image=image, author=author,
                                        **validated_data)
+        RecipeIngredient.objects.bulk_create(
+            [RecipeIngredient(recipe=recipe, ingredient=i,
+             amount=i['amount']) for i in ingredients_data]
+        )
         recipe.tags.set(tags_data)
         return recipe
 
@@ -197,8 +198,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         RecipeIngredient.objects.filter(recipe=recipe).delete()
-        RecipeIngredient.objects.bulk_update([RecipeIngredient(recipe=recipe, ingredient=i, 
-                                                               amount=i['amount']) for i in ingredients])
+        RecipeIngredient.objects.bulk_update(
+            [RecipeIngredient(recipe=recipe, ingredient=i,
+             amount=i['amount']) for i in ingredients]
+        )
         recipe.tags.set(tags)
         return super().update(recipe, validated_data)
 

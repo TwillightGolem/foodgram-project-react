@@ -34,12 +34,24 @@ class CustomUserSerializer(UserSerializer):
             'is_subscribed',
         )
 
+    def validate_username(self, username):
+        if username.lower() == 'me':
+            raise serializers.ValidationError('Имя me выбирать не стоит')
+        elif username is None or username == '':
+            raise serializers.ValidationError('Заполните имя')
+        return username
+
+    def clean(self):
+        cleaned_data = super().clean(self)
+        if User.objects.filter(email=cleaned_data.get('email')).exists():
+            self.fields.add_error('email', "Эта почта уже зарегестрированна")
+        return cleaned_data
+
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return Follow.objects.filter(user=self.context['request'].user,
-                                     author=obj).exists()
+        return (False if not request or request.user.is_anonymous
+                else Follow.objects.filter(user=self.context['request'].user,
+                                           author=obj).exists())
 
 
 class FollowRecipeSerializer(serializers.ModelSerializer):

@@ -1,4 +1,3 @@
-from api.pagination import LimitPageNumberPaginator
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -7,6 +6,7 @@ from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+from api.pagination import LimitPageNumberPaginator
 from .models import Follow, User
 from .serializers import FollowSerializer
 

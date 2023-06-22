@@ -7,9 +7,9 @@ from .models import (
     Ingredient,
     Recipe,
     RecipeIngredient,
-    ShoppingList, 
+    ShoppingList,
     Tag
-    )
+)
 
 
 @admin.register(Tag)
@@ -30,6 +30,7 @@ class IngredientResource(resources.ModelResource):
 
 class IngredientAdmin(ImportExportModelAdmin):
     resource_classes = [IngredientResource]
+
 
 admin.site.register(Ingredient, IngredientAdmin)
 

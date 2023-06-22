@@ -7,9 +7,12 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-3ln+by%(fbl0@-xu5!6b=o!9d+sogbt^p^=6e8(zq$2kmw2$f2'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
-DEBUG = True
+if str(os.getenv('DEBUG')) is None:
+    DEBUG = False
+else:
+    DEBUG = str(os.getenv('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -85,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 

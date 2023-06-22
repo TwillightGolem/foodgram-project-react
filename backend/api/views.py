@@ -15,28 +15,32 @@ from recipes.models import (
     RecipeIngredient,
     ShoppingList,
     Tag
-    )
+)
 from .serializers import (
     AddRecipeSerializer,
     IngredientSerializer,
     RecipeSerializer,
     ShowRecipeSerializer,
-    TagSerializer
-    )
+    TagSerializer,
+    ShowIngredientsInRecipeSerializer
+)
 
 
-def get_list_ingredients(user):
+class get_list_ingredientsViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_classes = ShowIngredientsInRecipeSerializer
+
+    def get_list_ingredients(user):
         ingredients = RecipeIngredient.objects.filter(
             recipe__shopping_recipe__user=user).values(
             name=F('ingredient__name'),
             measurement_unit=F('ingredient__measurement_unit')
         ).annotate(amount=Sum('amount')).values_list(
-            'ingredient__name', 'amount', 'ingredient__measurement_unit')
+                'ingredient__name', 'amount', 'ingredient__measurement_unit')
         return ingredients
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
-
     queryset = Recipe.objects.all()
     serializer_classes = {
         'retrieve': ShowRecipeSerializer,
@@ -73,10 +77,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return self._favorite_shopping_post(
                 request.user.favorite
             )
-        else:
-            return self._favorite_shopping_delete(
-                request.user.favorite
-            )
+        return self._favorite_shopping_delete(
+            request.user.favorite
+        )
 
     @action(detail=True,
             permission_classes=[permissions.IsAuthenticated],
@@ -86,10 +89,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return self._favorite_shopping_post(
                 request.user.shopping_user
             )
-        else:
-            return self._favorite_shopping_delete(
-                request.user.shopping_user
-            )
+        return self._favorite_shopping_delete(
+            request.user.shopping_user
+        )
 
     @action(
         detail=False,
