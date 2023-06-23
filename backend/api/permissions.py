@@ -6,22 +6,16 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (request.method in permissions.SAFE_METHODS
-                if not request.user.is_authenticated
-                else request.user.is_superuser
-                or request.user.is_authenticated)
+                or request.user.is_superuser)
 
     def has_object_permission(self, request, view, obj):
         return (request.method in permissions.SAFE_METHODS
-                if not request.user.is_authenticated
-                else request.user.is_superuser
-                or request.user.is_authenticated)
+                or request.user.is_superuser)
 
 
 class IsAuthorOrAdmin(permissions.BasePermission):
     """Проверка является ли пользователь администратором или автором"""
 
     def has_object_permission(self, request, view, obj):
-        return (True if request.user.is_authenticated
-                and request.user.is_superuser or obj.author == request.user
-                or request.method == 'POST'
-                else request.method in permissions.SAFE_METHODS)
+        return (request.method in permissions.SAFE_METHODS
+                or request.user.is_superuser or obj.author == request.user)

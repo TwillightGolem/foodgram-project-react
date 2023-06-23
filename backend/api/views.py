@@ -26,7 +26,7 @@ from .serializers import (
 )
 
 
-class get_list_ingredientsViewSet(viewsets.ModelViewSet):
+class GetListIngredientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_classes = ShowIngredientsInRecipeSerializer
 
