@@ -165,7 +165,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             )
         return ingredients
 
-    def validate_tags(tags):
+    def validate_tags(self, tags):
         if len(tags) != len(set(tags)):
             raise ValidationError('Теги не могут повторяться!')
         if tags is None:
