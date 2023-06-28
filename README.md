@@ -1,3 +1,4 @@
+![main](https://github.com/TwillightGolem/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 # Foodgram
 ## Описание:
 На сайте "Foodgram" пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в «Избранное», а перед походом в магазин скачивать в виде pdf-файла сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд. На сайте доступна система регистрации и авторизации пользователей. Неавторизованным пользователям доступен просмотр рецептов на главной странице с фильтрацией по тегам, страниц отдельных рецептов и страниц других пользователей. Фронтенд и бекенд взаимодействуют через API.
@@ -38,16 +39,68 @@ docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input
 ```
-После этого проект должен стать доступен по адресу http://localhost/.
+После этого проект должен стать доступен по адресу http://127.0.0.1/.
 
-Админ зона доступна по адресу http://localhost/admin/.
+Админ зона доступна по адресу http://127.0.0.1/admin/.
 
 ### Спецификация API в формате Redoc:
 
 Чтобы посмотреть спецификацию API в формате Redoc, нужно локально запустить 
-проект и перейти на страницу http://localhost/api/docs/
+проект и перейти на страницу http://127.0.0.1/api/docs/
 
+### Доступ к сайту для проверки:
 
+Адрес сайта: https://foodingramm.hopto.org/
+
+Администратор:
+```
+root              # Login
+root              # Password
+```
+
+Пользователь 1:
+```
+user1@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 2:
+```
+user2@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 3:
+```
+user3@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 4:
+```
+user4@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 5:
+```
+user5@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 6:
+```
+user6@infra.com       # E-mail
+12345678aA       # Password
+```
+
+Пользователь 7:
+```
+user7@infra.com       # E-mail
+12345678aA       # Password
+```
 
 #### Автор: 
-**Яковлев Александр**
+**[Яковлев Александр](https://github.com/TwillightGolem)**
+
+*truenoae8694yaa@yandex.ru*
