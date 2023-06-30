@@ -1,12 +1,16 @@
 from django.db.models import F
 from drf_base64.fields import Base64ImageField
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingList, Tag)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from users.models import User
 
-from users.serializers import CustomUserSerializer  # isort:skip
+from recipes.models import (FavoriteRecipe,
+                            Ingredient,
+                            Recipe,
+                            RecipeIngredient,
+                            ShoppingList,
+                            Tag)
+from users.models import User
+from users.serializers import CustomUserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -136,11 +140,11 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Нужно указать минимум 1 ингредиент.'
             )
-        for ingredient in obj.get('ingredients'): 
-            if int(ingredient['amount']) <= 0: 
-                raise serializers.ValidationError( 
+        for ingredient in obj.get('ingredients'):
+            if int(ingredient['amount']) <= 0:
+                raise serializers.ValidationError(
                     'Количество ингредиентов должно быть больше нуля!'
-                ) 
+                )
         inrgedient_id_list = [item['id'] for item in obj.get('ingredients')]
         unique_ingredient_id_list = set(inrgedient_id_list)
         if len(inrgedient_id_list) != len(unique_ingredient_id_list):
@@ -148,25 +152,6 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 'Ингредиенты должны быть уникальны.'
             )
         return obj
-
-
-    # def validate_ingredients(self, ingredients):
-
-    #     if not ingredients:
-    #         raise serializers.ValidationError(
-    #             'Необходимо выбрать ингредиенты!'
-    #         )
-    #     for ingredient in ingredients:
-    #         if int(ingredient['amount']) <= 0:
-    #             raise serializers.ValidationError(
-    #                 'Количество ингредиентов должно быть больше нуля!'
-    #             )
-    #     ids = [item['id'] for item in ingredients]
-    #     if len(ids) != len(set(ids)):
-    #         raise serializers.ValidationError(
-    #             'Ингредиенты в рецепте должны быть уникальными!'
-    #         )
-    #     return ingredients
 
     @staticmethod
     def validate_cooking_time(value):

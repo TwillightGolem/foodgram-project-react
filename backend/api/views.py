@@ -9,21 +9,17 @@ from rest_framework.response import Response
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import LimitPageNumberPaginator
 from .permissions import IsAdminOrReadOnly, IsAuthorOrAdmin
-from recipes.models import (
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingList,
-    Tag
-)
-from .serializers import (
-    AddRecipeSerializer,
-    IngredientSerializer,
-    RecipeSerializer,
-    ShowRecipeSerializer,
-    TagSerializer,
-    ShowIngredientsInRecipeSerializer
-)
+from recipes.models import (Ingredient,
+                            Recipe,
+                            RecipeIngredient,
+                            ShoppingList,
+                            Tag)
+from .serializers import (AddRecipeSerializer,
+                          IngredientSerializer,
+                          RecipeSerializer,
+                          ShowIngredientsInRecipeSerializer,
+                          ShowRecipeSerializer,
+                          TagSerializer)
 
 
 class GetListIngredientsViewSet(viewsets.ModelViewSet):
