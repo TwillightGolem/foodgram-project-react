@@ -31,7 +31,8 @@ class Api {
     })
   }
 
-  signin ({ email, password }) {
+  signin ({ email, password }){
+    email = email.toLowerCase()
     return fetch(
       '/api/auth/token/login/',
       {
