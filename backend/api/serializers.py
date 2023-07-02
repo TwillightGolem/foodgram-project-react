@@ -1,15 +1,11 @@
 from django.db.models import F
 from drf_base64.fields import Base64ImageField
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
+                            RecipeIngredient, ShoppingList, Tag)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
-from recipes.models import (FavoriteRecipe,
-                            Ingredient,
-                            Recipe,
-                            RecipeIngredient,
-                            ShoppingList,
-                            Tag)
 from users.models import User
+
 from users.serializers import CustomUserSerializer
 
 
@@ -141,9 +137,11 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 'Нужно указать минимум 1 ингредиент.'
             )
         for ingredient in obj.get('ingredients'):
-            if int(ingredient['amount']) <= 0:
+            if (type(ingredient['amount']) != int
+               or int(ingredient['amount']) <= 0):
                 raise serializers.ValidationError(
-                    'Количество ингредиентов должно быть больше нуля!'
+                    ('Количество ингредиентов должно'
+                     'быть числом и быть больше нуля!')
                 )
         inrgedient_id_list = [item['id'] for item in obj.get('ingredients')]
         unique_ingredient_id_list = set(inrgedient_id_list)
@@ -158,6 +156,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         if value <= 0:
             raise ValidationError(
                 'Время приготовления должно быть больше нуля!'
+            )
+        if type(value) != int:
+            raise ValidationError(
+                'Время приготовления должно быть числом!'
             )
         return value
 
